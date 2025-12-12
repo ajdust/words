@@ -40,12 +40,32 @@
       align-items: center;
       justify-content: center;
       background: radial-gradient(circle at top, #333, #111);
+      overflow: hidden;
     }
 
     .slide-main img {
+      /* Base behavior: don't stretch, keep aspect ratio */
       max-width: 100%;
       max-height: 100%;
+      width: auto;
+      height: auto;
       display: block;
+      object-fit: contain;
+      /* Center the image */
+      margin: 0 auto;
+    }
+
+    /* Landscape: fill width */
+    .slide-main img.landscape {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    /* Portrait: fill height */
+    .slide-main img.portrait {
+      height: 100%;
+      width: auto;
       object-fit: contain;
     }
 
@@ -101,7 +121,6 @@
     }
 
     /* Dropdown arrow and menu */
-
     .slide-selector {
       position: absolute;
       top: 10px;
@@ -190,15 +209,12 @@
       background: rgba(255, 255, 255, 0.14);
     }
 
-    /* Scrollbar styling (optional refinement) */
     .selector-list::-webkit-scrollbar {
       width: 6px;
     }
-
     .selector-list::-webkit-scrollbar-track {
       background: transparent;
     }
-
     .selector-list::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.2);
       border-radius: 999px;
@@ -230,7 +246,7 @@
         </div>
       </div>
 
-      <!-- Image goes here -->
+      <!-- Image -->
       <img id="slideImage" src="" alt="" />
     </div>
 
@@ -244,35 +260,12 @@
     </div>
   </div>
 
+  <!-- External data file with window.slides -->
+  <script src="slides-data.js"></script>
+
   <script>
-    // Replace this array with your own images
-    // Each object should have: imageUrl (string) and title (string)
-    const slides = [
-      {
-        imageUrl: "Images/EthylContainsLead.webp",
-        title: "Ethyl Leaded Gasoline"
-      },
-      {
-        imageUrl: "Images/EthylGrannies1954.jpg",
-        title: "Ethyl Grannies"
-      },
-      {
-        imageUrl: "Images/Toxic-effects-lead-WHO-logo.jpg",
-        title: "Lead is toxic"
-      },
-      {
-        imageUrl: "Images/LeadedGasBannedChart.jpg",
-        title: "Leaded gas for cars banned!"
-      },
-      {
-        imageUrl: "Images/FirstSocialBan2025.png",
-        title: "Australia bans underage social media"
-      },
-      {
-        imageUrl: "Images/MoreDoctorsSmokeCamels.webp",
-        title: "Doctors smoke Camels 🚬"
-      }
-    ];
+    // Expect slides to be defined in slides-data.js as window.slides
+    const slides = (window.slides || []).slice(); // shallow copy for safety
 
     // DOM elements
     const slideImage = document.getElementById("slideImage");
@@ -287,6 +280,25 @@
     const selectorList = document.getElementById("selectorList");
 
     let currentIndex = 0;
+
+    function updateImageOrientation() {
+      // Clear previous classes
+      slideImage.classList.remove("landscape", "portrait");
+
+      // If natural sizes are known, decide orientation
+      const w = slideImage.naturalWidth;
+      const h = slideImage.naturalHeight;
+
+      if (!w || !h) return;
+
+      if (w >= h) {
+        // Landscape or square: fill width
+        slideImage.classList.add("landscape");
+      } else {
+        // Portrait: fill height
+        slideImage.classList.add("portrait");
+      }
+    }
 
     function renderSlide() {
       if (slides.length === 0) {
@@ -368,14 +380,12 @@
       toggleSelectorMenu();
     });
 
-    // Close dropdown when clicking outside
     document.addEventListener("click", (event) => {
       if (!selectorMenu.contains(event.target) && !selectorToggle.contains(event.target)) {
         closeSelectorMenu();
       }
     });
 
-    // Optional: arrow key navigation
     document.addEventListener("keydown", (event) => {
       if (event.key === "ArrowLeft") {
         changeSlide(-1);
@@ -386,10 +396,12 @@
       }
     });
 
+    // Update orientation when image finishes loading (and on initial load)
+    slideImage.addEventListener("load", updateImageOrientation);
+
     // Initialize
     buildSelectorMenu();
     renderSlide();
   </script>
 </body>
 </html>
-
