@@ -11,24 +11,20 @@
       padding: 0;
     }
 
-    body {
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden; /* Prevent scrolling */
+      background: #000;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #111;
       color: #f5f5f5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
     }
 
+    /* The slideshow is now full-screen */
     .slideshow {
-      position: relative;
-      width: min(90vw, 900px);
-      height: min(70vh, 600px);
-      background: #181818;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+      position: absolute;
+      inset: 0; /* fill the window */
+      background: #000;
       display: flex;
       flex-direction: column;
     }
@@ -39,48 +35,40 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: radial-gradient(circle at top, #333, #111);
+      background: #000;
       overflow: hidden;
     }
 
     .slide-main img {
-      /* Base behavior: don't stretch, keep aspect ratio */
       max-width: 100%;
       max-height: 100%;
       width: auto;
       height: auto;
-      display: block;
       object-fit: contain;
-      /* Center the image */
-      margin: 0 auto;
     }
 
-    /* Landscape: fill width */
+    /* Landscape behavior */
     .slide-main img.landscape {
       width: 100%;
       height: auto;
-      object-fit: contain;
     }
 
-    /* Portrait: fill height */
+    /* Portrait behavior */
     .slide-main img.portrait {
       height: 100%;
       width: auto;
-      object-fit: contain;
     }
 
+    /* Bottom bar now sits at the bottom edge */
     .bottom-bar {
       padding: 10px 14px;
+      height: 50px;
       display: flex;
       align-items: center;
       gap: 12px;
-      background: rgba(0, 0, 0, 0.75);
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .nav-buttons {
-      display: flex;
-      gap: 8px;
+      background: rgba(0, 0, 0, 0.55);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(6px);
     }
 
     button {
@@ -91,18 +79,12 @@
       cursor: pointer;
       background: #2c2c2c;
       color: #f5f5f5;
-      transition: transform 0.08s ease, background 0.08s ease, box-shadow 0.08s ease;
+      transition: background 0.08s, transform 0.08s;
     }
 
     button:hover {
       background: #3b3b3b;
-      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
       transform: translateY(-1px);
-    }
-
-    button:active {
-      transform: translateY(0);
-      box-shadow: none;
     }
 
     .index-display {
@@ -120,11 +102,11 @@
       opacity: 0.95;
     }
 
-    /* Dropdown arrow and menu */
+    /* Slide selector dropdown */
     .slide-selector {
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 12px;
+      right: 12px;
       z-index: 10;
     }
 
@@ -135,30 +117,26 @@
       width: 32px;
       height: 32px;
       border-radius: 999px;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.7);
       cursor: pointer;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       font-size: 16px;
       user-select: none;
-    }
-
-    .selector-toggle span {
-      transform: translateY(1px);
     }
 
     .selector-menu {
       position: absolute;
       top: 40px;
       right: 0;
-      width: 240px;
+      width: 260px;
       max-height: 260px;
       background: #1e1e1e;
       border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7);
-      overflow: hidden;
       display: none;
       flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.7);
       font-size: 13px;
     }
 
@@ -168,7 +146,7 @@
 
     .selector-header {
       padding: 8px 10px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       opacity: 0.8;
     }
 
@@ -178,103 +156,56 @@
     }
 
     .selector-item {
-      width: 100%;
       padding: 7px 10px;
-      background: transparent;
-      text-align: left;
       display: flex;
       gap: 8px;
-      align-items: baseline;
-      font-size: 12px;
-    }
-
-    .selector-item-index {
-      opacity: 0.6;
-      flex: 0 0 auto;
-      width: 2em;
-    }
-
-    .selector-item-title {
-      flex: 1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .selector-item.active {
-      background: rgba(255, 255, 255, 0.1);
+      background: transparent;
+      text-align: left;
+      width: 100%;
     }
 
     .selector-item:hover {
-      background: rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.12);
     }
 
-    .selector-list::-webkit-scrollbar {
-      width: 6px;
-    }
-    .selector-list::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .selector-list::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 999px;
-    }
-
-    @media (max-width: 600px) {
-      .bottom-bar {
-        flex-wrap: wrap;
-      }
-      .title-display {
-        flex-basis: 100%;
-      }
+    .selector-item.active {
+      background: rgba(255, 255, 255, 0.18);
     }
   </style>
 </head>
 <body>
-  <div class="slideshow" id="slideshow">
+
+  <div class="slideshow">
     <div class="slide-main">
-      <!-- Dropdown selector -->
-      <div class="slide-selector" id="slideSelector">
-        <div class="selector-toggle" id="selectorToggle" title="Jump to slide">
-          <span>▾</span>
-        </div>
+      <div class="slide-selector">
+        <div class="selector-toggle" id="selectorToggle">▾</div>
         <div class="selector-menu" id="selectorMenu">
           <div class="selector-header">Jump to slide</div>
-          <div class="selector-list" id="selectorList">
-            <!-- Items generated by JS -->
-          </div>
+          <div class="selector-list" id="selectorList"></div>
         </div>
       </div>
-
-      <!-- Image -->
       <img id="slideImage" src="" alt="" />
     </div>
 
     <div class="bottom-bar">
-      <div class="nav-buttons">
-        <button id="prevBtn" type="button" aria-label="Previous slide">&larr; Prev</button>
-        <button id="nextBtn" type="button" aria-label="Next slide">Next &rarr;</button>
-      </div>
+      <button id="prevBtn">&larr; Prev</button>
+      <button id="nextBtn">Next &rarr;</button>
       <div class="index-display" id="indexDisplay"></div>
       <div class="title-display" id="titleDisplay"></div>
     </div>
   </div>
 
-  <!-- External data file with window.slides -->
+  <!-- Load external slide data -->
   <script src="slides-data.js"></script>
 
   <script>
-    // Expect slides to be defined in slides-data.js as window.slides
-    const slides = (window.slides || []).slice(); // shallow copy for safety
+    const slides = window.slides || [];
 
-    // DOM elements
     const slideImage = document.getElementById("slideImage");
     const indexDisplay = document.getElementById("indexDisplay");
     const titleDisplay = document.getElementById("titleDisplay");
-
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
-
     const selectorToggle = document.getElementById("selectorToggle");
     const selectorMenu = document.getElementById("selectorMenu");
     const selectorList = document.getElementById("selectorList");
@@ -282,54 +213,35 @@
     let currentIndex = 0;
 
     function updateImageOrientation() {
-      // Clear previous classes
       slideImage.classList.remove("landscape", "portrait");
 
-      // If natural sizes are known, decide orientation
       const w = slideImage.naturalWidth;
       const h = slideImage.naturalHeight;
-
       if (!w || !h) return;
 
       if (w >= h) {
-        // Landscape or square: fill width
         slideImage.classList.add("landscape");
       } else {
-        // Portrait: fill height
         slideImage.classList.add("portrait");
       }
     }
 
     function renderSlide() {
-      if (slides.length === 0) {
-        slideImage.src = "";
-        slideImage.alt = "No slides";
-        indexDisplay.textContent = "No slides";
-        titleDisplay.textContent = "";
-        selectorList.innerHTML = "";
-        return;
-      }
+      if (slides.length === 0) return;
 
       const slide = slides[currentIndex];
-
       slideImage.src = slide.imageUrl;
-      slideImage.alt = slide.title || "Slide " + (currentIndex + 1);
+      slideImage.alt = slide.title;
       indexDisplay.textContent = `Slide ${currentIndex + 1} / ${slides.length}`;
-      titleDisplay.textContent = slide.title || "";
+      titleDisplay.textContent = slide.title;
 
-      // Update selector highlighting
       const items = selectorList.querySelectorAll(".selector-item");
       items.forEach((item, idx) => {
-        if (idx === currentIndex) {
-          item.classList.add("active");
-        } else {
-          item.classList.remove("active");
-        }
+        item.classList.toggle("active", idx === currentIndex);
       });
     }
 
     function changeSlide(delta) {
-      if (slides.length === 0) return;
       currentIndex = (currentIndex + delta + slides.length) % slides.length;
       renderSlide();
     }
@@ -337,69 +249,38 @@
     function buildSelectorMenu() {
       selectorList.innerHTML = "";
       slides.forEach((slide, idx) => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "selector-item";
-        btn.dataset.index = String(idx);
-
-        const indexSpan = document.createElement("span");
-        indexSpan.className = "selector-item-index";
-        indexSpan.textContent = idx + 1 + ".";
-
-        const titleSpan = document.createElement("span");
-        titleSpan.className = "selector-item-title";
-        titleSpan.textContent = slide.title || `Slide ${idx + 1}`;
-
-        btn.appendChild(indexSpan);
-        btn.appendChild(titleSpan);
-
-        btn.addEventListener("click", () => {
+        const item = document.createElement("button");
+        item.className = "selector-item";
+        item.textContent = `${idx + 1}. ${slide.title}`;
+        item.addEventListener("click", () => {
           currentIndex = idx;
           renderSlide();
-          closeSelectorMenu();
+          selectorMenu.classList.remove("open");
         });
-
-        selectorList.appendChild(btn);
+        selectorList.appendChild(item);
       });
     }
 
-    function toggleSelectorMenu() {
-      selectorMenu.classList.toggle("open");
-    }
-
-    function closeSelectorMenu() {
-      selectorMenu.classList.remove("open");
-    }
-
-    // Event listeners
     prevBtn.addEventListener("click", () => changeSlide(-1));
     nextBtn.addEventListener("click", () => changeSlide(1));
-
-    selectorToggle.addEventListener("click", (event) => {
-      event.stopPropagation();
-      toggleSelectorMenu();
+    selectorToggle.addEventListener("click", () => {
+      selectorMenu.classList.toggle("open");
     });
 
-    document.addEventListener("click", (event) => {
-      if (!selectorMenu.contains(event.target) && !selectorToggle.contains(event.target)) {
-        closeSelectorMenu();
+    document.addEventListener("click", (e) => {
+      if (!selectorMenu.contains(e.target) && !selectorToggle.contains(e.target)) {
+        selectorMenu.classList.remove("open");
       }
     });
 
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "ArrowLeft") {
-        changeSlide(-1);
-      } else if (event.key === "ArrowRight") {
-        changeSlide(1);
-      } else if (event.key === "Escape") {
-        closeSelectorMenu();
-      }
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") changeSlide(-1);
+      if (e.key === "ArrowRight") changeSlide(1);
+      if (e.key === "Escape") selectorMenu.classList.remove("open");
     });
 
-    // Update orientation when image finishes loading (and on initial load)
     slideImage.addEventListener("load", updateImageOrientation);
 
-    // Initialize
     buildSelectorMenu();
     renderSlide();
   </script>
