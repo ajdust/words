@@ -1,5 +1,9 @@
 window.slides = [
   {
+    imageUrl: "dark.webp",
+    title: ""
+  },
+  {
     imageUrl: "Images/EthylContainsLead.webp",
     title: "Ethyl Leaded Gasoline"
   },
