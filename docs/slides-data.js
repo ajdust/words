@@ -20,6 +20,10 @@ window.slides = [
     title: "Australia bans underage social media"
   },
   {
+  	imageUrl: "Images/chatgpts-growth-is-faster-than-internet.webp",
+  	title: "ChatGPT growth vs. Internet"
+  },
+  {
     imageUrl: "Images/MoreDoctorsSmokeCamels.webp",
     title: "Doctors smoke Camels 🚬"
   }
